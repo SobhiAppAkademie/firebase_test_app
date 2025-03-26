@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "233214328613",
+    "project_id": "test-vl-app",
+    "storage_bucket": "test-vl-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:233214328613:android:b50160236c3099c75f24cc",
+        "android_client_info": {
+          "package_name": "com.example.testvlapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUtDxp4fL1CJHWMldsxuSBEQKtSCkA8m4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
