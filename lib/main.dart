@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:testvlapp/features/auth/data/login_repository.dart';
+import 'package:testvlapp/features/auth/data/auth_repository.dart';
+import 'package:testvlapp/features/auth/data/firebase_auth_repository.dart';
 import 'package:testvlapp/features/auth/screens/home.dart';
 import 'package:testvlapp/features/auth/screens/login.dart';
 import 'package:testvlapp/firebase_options.dart';
@@ -16,15 +17,15 @@ void main() async {
   FirebaseAuth auth = FirebaseAuth.instance;
 
   // Login Repository
-  final loginRepository = LoginRepository(auth);
+  final AuthRepository authRepository = FirebaseAuthRepository(auth);
 
-  runApp(App(loginRepository: loginRepository));
+  runApp(App(authRepository: authRepository));
 }
 
 class App extends StatelessWidget {
-  final LoginRepository loginRepository;
+  final AuthRepository authRepository;
 
-  const App({super.key, required this.loginRepository});
+  const App({super.key, required this.authRepository});
 
   // This widget is the root of your application.
   @override
@@ -38,14 +39,14 @@ class App extends StatelessWidget {
 
       /// Echtzeit-Abfrage, um zu überprüfen, ob der Nutzer authentifiziert ist
       home: StreamBuilder<User?>(
-          stream: loginRepository.onAuthChanged,
+          stream: authRepository.onAuthChanged() as Stream<User?>,
           builder: (context, snapshot) {
             /// User ist authentifiziert
             if (snapshot.hasData && snapshot.data != null) {
               final user = snapshot.data!;
-              return HomeScreen(user: user, loginRepository: loginRepository);
+              return HomeScreen(user: user, authRepository: authRepository);
             }
-            return LoginScreen(loginRepository: loginRepository);
+            return LoginScreen(authRepository: authRepository);
           }),
     );
   }

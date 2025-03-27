@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:testvlapp/features/auth/data/login_repository.dart';
+import 'package:testvlapp/features/auth/data/auth_repository.dart';
 
 class HomeScreen extends StatelessWidget {
   final User user;
-  final LoginRepository loginRepository;
+  final AuthRepository authRepository;
   const HomeScreen(
-      {super.key, required this.user, required this.loginRepository});
+      {super.key, required this.user, required this.authRepository});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(user.email!),
+          Text(user.email ?? "n.a"),
           SizedBox(
             height: 2,
           ),
@@ -24,7 +24,7 @@ class HomeScreen extends StatelessWidget {
             height: 5,
           ),
           ElevatedButton(
-              onPressed: () => loginRepository.logOut(),
+              onPressed: () => authRepository.logOut(),
               child: Center(
                 child: Text("Ausloggen"),
               ))
