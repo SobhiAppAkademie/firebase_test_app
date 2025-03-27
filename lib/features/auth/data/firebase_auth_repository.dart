@@ -29,9 +29,16 @@ class FirebaseAuthRepository implements AuthRepository {
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'email-already-in-use':
-          return "E-Mail ist bereits vergeben";
+          return "Diese E-Mail-Adresse wird bereits verwendet.";
+        case 'invalid-email':
+          return "Die eingegebene E-Mail-Adresse ist ungültig.";
+        case 'weak-password':
+          return "Das Passwort ist zu schwach. Bitte wählen Sie ein stärkeres Passwort.";
+        case 'operation-not-allowed':
+          return "Die Registrierung mit E-Mail und Passwort ist derzeit nicht aktiviert.";
+        default:
+          return "Ein unbekannter Fehler ist aufgetreten: ${e.message}";
       }
-      return "Fehler ist aufgetreten";
     }
     return null;
   }
@@ -46,8 +53,18 @@ class FirebaseAuthRepository implements AuthRepository {
       // Authentifizierungsfehler abfangen
 
       switch (e.code) {
-        case "invalid-credential":
-          return "Falsche Anmeldedaten";
+        case 'invalid-email':
+          return "Die E-Mail-Adresse ist ungültig.";
+        case 'user-disabled':
+          return "Dieses Benutzerkonto wurde deaktiviert.";
+        case 'user-not-found':
+          return "Kein Benutzer gefunden. Bitte registrieren Sie sich.";
+        case 'wrong-password':
+          return "Falsches Passwort. Bitte versuchen Sie es erneut.";
+        case 'too-many-requests':
+          return "Zu viele fehlgeschlagene Anmeldeversuche. Bitte versuchen Sie es später erneut.";
+        default:
+          return "Ein unbekannter Fehler ist aufgetreten: ${e.message}";
       }
     }
     return null;
