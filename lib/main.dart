@@ -30,24 +30,22 @@ class App extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-
-      /// Echtzeit-Abfrage, um zu überprüfen, ob der Nutzer authentifiziert ist
-      home: StreamBuilder<User?>(
-          stream: authRepository.onAuthChanged() as Stream<User?>,
-          builder: (context, snapshot) {
-            /// User ist authentifiziert
-            if (snapshot.hasData && snapshot.data != null) {
-              final user = snapshot.data!;
-              return HomeScreen(user: user, authRepository: authRepository);
-            }
-            return LoginScreen(authRepository: authRepository);
-          }),
-    );
+    return StreamBuilder<User?>(
+        stream: authRepository.onAuthChanged() as Stream<User?>,
+        builder: (context, snapshot) {
+          // Es reicht zu überprüfen, ob wir einen User haben
+          final isLoggedIn = snapshot.data != null;
+          final user = snapshot.data;
+          return MaterialApp(
+              key: isLoggedIn ? Key("logged_in") : Key("not_logged_in"),
+              title: 'Flutter Demo',
+              theme: ThemeData(
+                colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+                useMaterial3: true,
+              ),
+              home: isLoggedIn
+                  ? HomeScreen(user: user!, authRepository: authRepository)
+                  : LoginScreen(authRepository: authRepository));
+        });
   }
 }

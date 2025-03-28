@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:testvlapp/features/auth/data/auth_repository.dart';
+import 'package:testvlapp/features/auth/models/sms_response.dart';
 import 'package:testvlapp/features/auth/models/user_data.dart';
 
 class MockAuthRepository implements AuthRepository {
@@ -86,6 +87,22 @@ class MockAuthRepository implements AuthRepository {
       users.add(user);
     }
     streamController.add(foundUser);
+    return null;
+  }
+
+  @override
+  Future<String?> resetPassword(String email) async {
+    return null;
+  }
+
+  @override
+  Future<SmsResponse> sendSMSCode(String phone) async {
+    return SmsResponse(verificationId: "123456");
+  }
+
+  @override
+  Future<String?> signInWithPhoneNumber(
+      String verificationId, String smsCode) async {
     return null;
   }
 }

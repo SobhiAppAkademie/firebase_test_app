@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(user.email ?? "n.a"),
+          Text(user.email ?? user.phoneNumber ?? "n.a"),
           SizedBox(
             height: 2,
           ),

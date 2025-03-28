@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:testvlapp/features/auth/data/auth_repository.dart';
+import 'package:testvlapp/features/auth/screens/password_reset.dart';
+import 'package:testvlapp/features/auth/screens/phone_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   final AuthRepository authRepository;
@@ -48,6 +50,24 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {});
   }
 
+  void passwordReset() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => PasswordResetScreen(
+                  authRepository: widget.authRepository,
+                )));
+  }
+
+  void phoneLogin() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => PhoneScreen(
+                  authRepository: widget.authRepository,
+                )));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,6 +88,8 @@ class _LoginScreenState extends State<LoginScreen> {
               decoration: InputDecoration(hintText: "Passwort"),
               controller: passwordController,
             ),
+            TextButton(
+                onPressed: passwordReset, child: Text("Passwort vergessen?")),
             SizedBox(
               height: 10,
             ),
@@ -99,6 +121,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: () => googleLogin(),
                 child: Center(
                   child: Text("Google Login"),
+                )),
+            SizedBox(
+              height: 10,
+            ),
+            ElevatedButton(
+                onPressed: () => phoneLogin(),
+                child: Center(
+                  child: Text("Phone Login"),
                 )),
           ],
         ),
