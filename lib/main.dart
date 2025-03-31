@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:testvlapp/features/auth/data/auth_repository.dart';
 import 'package:testvlapp/features/auth/data/firebase_auth_repository.dart';
+import 'package:testvlapp/features/auth/data/firestore_user_repository.dart';
+import 'package:testvlapp/features/auth/data/user_repository.dart';
 import 'package:testvlapp/features/auth/screens/home.dart';
 import 'package:testvlapp/features/auth/screens/login.dart';
 import 'package:testvlapp/firebase_options.dart';
@@ -14,18 +17,27 @@ void main() async {
   );
 
   // Firebase Auth Instanz
-  FirebaseAuth auth = FirebaseAuth.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
-  // Login Repository
+  // Firestore Instanz
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  // Repository
   final AuthRepository authRepository = FirebaseAuthRepository(auth);
+  final UserRepository userRepository = FirestoreUserRepository(firestore);
 
-  runApp(App(authRepository: authRepository));
+  runApp(App(
+    authRepository: authRepository,
+    userRepository: userRepository,
+  ));
 }
 
 class App extends StatelessWidget {
   final AuthRepository authRepository;
+  final UserRepository userRepository;
 
-  const App({super.key, required this.authRepository});
+  const App(
+      {super.key, required this.authRepository, required this.userRepository});
 
   // This widget is the root of your application.
   @override
@@ -44,7 +56,11 @@ class App extends StatelessWidget {
                 useMaterial3: true,
               ),
               home: isLoggedIn
-                  ? HomeScreen(user: user!, authRepository: authRepository)
+                  ? HomeScreen(
+                      user: user!,
+                      authRepository: authRepository,
+                      userRepository: userRepository,
+                    )
                   : LoginScreen(authRepository: authRepository));
         });
   }
