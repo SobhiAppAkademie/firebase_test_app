@@ -8,6 +8,8 @@ import 'package:testvlapp/features/auth/data/firestore_user_repository.dart';
 import 'package:testvlapp/features/auth/data/user_repository.dart';
 import 'package:testvlapp/features/auth/screens/home.dart';
 import 'package:testvlapp/features/auth/screens/login.dart';
+import 'package:testvlapp/features/todo/data/firestore_todo_repository.dart';
+import 'package:testvlapp/features/todo/data/todo_repository.dart';
 import 'package:testvlapp/firebase_options.dart';
 
 void main() async {
@@ -25,19 +27,25 @@ void main() async {
   // Repository
   final AuthRepository authRepository = FirebaseAuthRepository(auth);
   final UserRepository userRepository = FirestoreUserRepository(firestore);
+  final TodoRepository todoRepository = FirestoreTodoRepository(firestore);
 
   runApp(App(
     authRepository: authRepository,
     userRepository: userRepository,
+    todoRepository: todoRepository,
   ));
 }
 
 class App extends StatelessWidget {
   final AuthRepository authRepository;
   final UserRepository userRepository;
+  final TodoRepository todoRepository;
 
   const App(
-      {super.key, required this.authRepository, required this.userRepository});
+      {super.key,
+      required this.authRepository,
+      required this.userRepository,
+      required this.todoRepository});
 
   // This widget is the root of your application.
   @override
@@ -60,6 +68,7 @@ class App extends StatelessWidget {
                       user: user!,
                       authRepository: authRepository,
                       userRepository: userRepository,
+                      todoRepository: todoRepository,
                     )
                   : LoginScreen(authRepository: authRepository));
         });

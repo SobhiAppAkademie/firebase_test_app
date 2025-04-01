@@ -2,15 +2,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:testvlapp/features/auth/data/auth_repository.dart';
 import 'package:testvlapp/features/auth/data/user_repository.dart';
+import 'package:testvlapp/features/todo/data/todo_repository.dart';
+import 'package:testvlapp/features/todo/screens/todo_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   final User user;
   final AuthRepository authRepository;
   final UserRepository userRepository;
+  final TodoRepository todoRepository;
   const HomeScreen(
       {super.key,
       required this.user,
       required this.authRepository,
+      required this.todoRepository,
       required this.userRepository});
 
   @override
@@ -46,6 +50,17 @@ class HomeScreen extends StatelessWidget {
                   return Text("Keine Daten");
                 }
               }),
+          SizedBox(
+            height: 5,
+          ),
+          ElevatedButton(
+              onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TodoScreen(
+                            todoRepository: todoRepository,
+                          ))),
+              child: Text("To-Do's")),
           SizedBox(
             height: 5,
           ),
