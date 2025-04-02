@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:testvlapp/features/todo/data/todo_repository.dart';
-import 'package:testvlapp/features/todo/models/todo.dart';
+import 'package:testvlapp/features/todo/screens/components/unfinished_todos_widget.dart';
 import 'package:testvlapp/features/todo/screens/todo_add_screen.dart';
+import 'package:testvlapp/features/todo/screens/todo_finished_screen.dart';
 
 class TodoScreen extends StatefulWidget {
   final TodoRepository todoRepository;
@@ -13,16 +13,13 @@ class TodoScreen extends StatefulWidget {
 }
 
 class _TodoScreenState extends State<TodoScreen> {
-  void addToDo() {
+  void openAddModal() {
     showModalBottomSheet(
         context: context,
+        isScrollControlled: true,
         builder: (context) => TodoAddScreen(
               todoRepository: widget.todoRepository,
             ));
-  }
-
-  void deleteToDo(String docID) {
-    widget.todoRepository.deleteToDo(docID);
   }
 
   @override
@@ -45,58 +42,35 @@ class _TodoScreenState extends State<TodoScreen> {
                       style:
                           TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                     ),
-                    GestureDetector(
-                      onTap: () => addToDo(),
-                      child: CircleAvatar(
-                        child: Icon(Icons.add),
-                      ),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TodoFinishedScreen(
+                                      todoRepository: widget.todoRepository))),
+                          child: CircleAvatar(
+                            child: Icon(Icons.check),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () => openAddModal(),
+                          child: CircleAvatar(
+                            child: Icon(Icons.add),
+                          ),
+                        ),
+                      ],
                     )
                   ],
                 ),
                 SizedBox(
                   height: 30,
                 ),
-                StreamBuilder<List<Todo>>(
-                    stream: widget.todoRepository.getTodos(),
-                    builder: (context, snapshot) {
-                      // Fall 1: Fehler aufgetreten
-                      if (snapshot.hasError) {
-                        return Text("Fehler: ${snapshot.error}");
-                      } else if (snapshot.connectionState ==
-                              ConnectionState.active &&
-                          !snapshot.hasData) {
-                        // Fall 2: Wir laden noch
-                        return CupertinoActivityIndicator();
-                      } else if (snapshot.hasData && snapshot.data != null) {
-                        final todos = snapshot.data!;
-                        // Fall 3: Wir haben Daten
-                        return ListView.separated(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            separatorBuilder: (context, index) =>
-                                SizedBox(height: 10),
-                            itemCount: todos.length,
-                            itemBuilder: (context, index) {
-                              final todo = todos[index];
-                              return CheckboxListTile.adaptive(
-                                title: Text(todo.title),
-                                subtitle: Text(todo.text),
-                                value: todo.isDone,
-                                secondary: GestureDetector(
-                                  onTap: () => deleteToDo(todo.docID),
-                                  child: CircleAvatar(
-                                    backgroundColor: Colors.red,
-                                    child: Icon(Icons.delete),
-                                  ),
-                                ),
-                                onChanged: (value) {},
-                              );
-                            });
-                      }
-
-                      // Fall 4: Verbindung erfolgreich, aber keine Daten vorhanden
-                      return Text("Keine Daten");
-                    })
+                UnfinishedTodosWidget(todoRepository: widget.todoRepository)
               ],
             ),
           ),

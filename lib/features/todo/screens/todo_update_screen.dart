@@ -2,30 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:testvlapp/features/todo/data/todo_repository.dart';
 import 'package:testvlapp/features/todo/models/todo.dart';
 
-class TodoAddScreen extends StatefulWidget {
+class TodoUpdateScreen extends StatefulWidget {
   final TodoRepository todoRepository;
-  const TodoAddScreen({super.key, required this.todoRepository});
+  final Todo todo;
+  const TodoUpdateScreen(
+      {super.key, required this.todoRepository, required this.todo});
 
   @override
-  State<TodoAddScreen> createState() => _TodoAddScreenState();
+  State<TodoUpdateScreen> createState() => _TodoUpdateScreenState();
 }
 
-class _TodoAddScreenState extends State<TodoAddScreen> {
-  final TextEditingController titleController = TextEditingController();
-  final TextEditingController textController = TextEditingController();
+class _TodoUpdateScreenState extends State<TodoUpdateScreen> {
+  late final TextEditingController titleController;
+  late final TextEditingController textController;
 
-  void addTodo() {
+  @override
+  void initState() {
+    titleController = TextEditingController(text: widget.todo.title);
+    textController = TextEditingController(text: widget.todo.text);
+    super.initState();
+  }
+
+  void updateTodo() {
     final String title = titleController.text;
     final String text = textController.text;
 
-    final todo = Todo(
-        title: title,
-        text: text,
-        isDone: false,
-        docID: "",
-        createdAt: DateTime.now());
-
-    widget.todoRepository.addToDo(todo);
+    widget.todoRepository.updateToDo(widget.todo.docID, title, text);
 
     Navigator.pop(context);
   }
@@ -42,7 +44,7 @@ class _TodoAddScreenState extends State<TodoAddScreen> {
           child: Column(
             children: [
               Text(
-                "ToDo hinzufügen",
+                "ToDo bearbeiten",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -63,9 +65,9 @@ class _TodoAddScreenState extends State<TodoAddScreen> {
                 height: 30,
               ),
               ElevatedButton(
-                  onPressed: () => addTodo(),
+                  onPressed: () => updateTodo(),
                   child: Center(
-                    child: Text("Todo in der DB hinzufügen"),
+                    child: Text("Todo in der DB updaten"),
                   ))
             ],
           ),

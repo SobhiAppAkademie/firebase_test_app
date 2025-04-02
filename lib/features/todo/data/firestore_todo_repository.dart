@@ -18,14 +18,30 @@ class FirestoreTodoRepository implements TodoRepository {
   }
 
   @override
-  Future<void> updateToDoState(String docID, bool value) {
-    // TODO: implement updateToDoState
-    throw UnimplementedError();
+  Future<void> updateToDoState(String docID, bool value) async {
+    await _db
+        .collection("todos")
+        .doc(docID)
+        .update({"isDone": value, "createdAt": DateTime.now()});
   }
 
   @override
-  Stream<List<Todo>> getTodos() {
-    return _db.collection("todos").snapshots().map((snapshot) =>
-        snapshot.docs.map((doc) => Todo.fromMap(doc.data(), doc.id)).toList());
+  Stream<List<Todo>> getTodos(bool isDone) {
+    return _db
+        .collection("todos")
+        .where("isDone", isEqualTo: isDone)
+        .orderBy("createdAt")
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Todo.fromMap(doc.data(), doc.id))
+            .toList());
+  }
+
+  @override
+  Future<void> updateToDo(String docID, String title, String text) async {
+    await _db
+        .collection("todos")
+        .doc(docID)
+        .update({"title": title, "text": text});
   }
 }

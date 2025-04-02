@@ -3,6 +3,7 @@ class Todo {
   final String docID;
   final String title;
   final String text;
+  final DateTime createdAt;
   final bool isDone;
 
   // Konstruktor
@@ -10,6 +11,7 @@ class Todo {
       {required this.title,
       required this.text,
       required this.isDone,
+      required this.createdAt,
       required this.docID});
 
   // Factory
@@ -18,10 +20,16 @@ class Todo {
         title: map["title"] as String,
         text: map["text"] as String,
         isDone: map["isDone"] as bool,
+        createdAt: map["createdAt"].toDate(),
         docID: docID);
   }
 
   Map<String, dynamic> toMap() {
-    return {"title": title, "text": text, "isDone": isDone};
+    return {
+      "title": title,
+      "text": text,
+      "isDone": isDone,
+      "createdAt": createdAt
+    };
   }
 }

@@ -10,5 +10,9 @@ abstract class TodoRepository {
   // Todo in der DB updaten (isDone)
   Future<void> updateToDoState(String docID, bool value);
 
-  Stream<List<Todo>> getTodos();
+  // Todo in der DB updaten (vollständig)
+  Future<void> updateToDo(String docID, String title, String text);
+
+  // Alle Todo's filtern nach isDone
+  Stream<List<Todo>> getTodos(bool isDone);
 }
